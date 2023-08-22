@@ -9,18 +9,16 @@ import os
 
 load_dotenv()
 
+app = FastAPI()
+
+PROJECT_KEY = os.environ.get('DETA_PROJECT_KEY')
+deta = Deta(PROJECT_KEY)
+db = deta.Base("Todos")
+
 
 class Todo(BaseModel):
     name: str
     is_done: bool = Field(default=False)
-
-app = FastAPI()
-
-
-PROJECT_KEY = os.environ.get('DETA_PROJECT_KEY')
-
-deta = Deta(PROJECT_KEY)
-db = deta.Base("Todos")
 
 store_todos = []
 
@@ -36,7 +34,12 @@ async def create_todo(todo: Todo):
 
 @app.get('/todos/', response_model=List[Todo])
 async def get_all_todos():
-    return store_todos
+    return db.fetch()
+
+
+@app.post('/todos/')
+async def create_todo(todo: Todo):
+    return db.put(todo.dict())
 
 
 @app.get('/todos/{id}')
