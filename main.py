@@ -2,6 +2,11 @@ from fastapi import FastAPI
 from pydantic import BaseModel, Field
 from typing import List
 from fastapi.exceptions import HTTPException
+from deta import Deta
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 class Todo(BaseModel):
@@ -9,6 +14,10 @@ class Todo(BaseModel):
     is_done: bool = Field(default=False)
 
 app = FastAPI()
+
+deta = Deta()
+
+db = deta.Base('Todo')
 
 store_todos = []
 
