@@ -17,7 +17,10 @@ class Todo(BaseModel):
 app = FastAPI()
 
 
-db = Deta(os.environ.get("DETA_PROJECT_KEY")).Base("Todo")
+PROJECT_KEY = os.environ.get('DETA_PROJECT_KEY')
+
+deta = Deta(PROJECT_KEY)
+db = deta.Base("Todos")
 
 store_todos = []
 
