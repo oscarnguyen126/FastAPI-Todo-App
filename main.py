@@ -4,6 +4,7 @@ from typing import List
 from fastapi.exceptions import HTTPException
 from deta import Deta
 from dotenv import load_dotenv
+import os
 
 
 load_dotenv()
@@ -15,9 +16,8 @@ class Todo(BaseModel):
 
 app = FastAPI()
 
-deta = Deta()
 
-db = deta.Base('Todo')
+db = Deta(os.environ.get("DETA_PROJECT_KEY")).Base("Todo")
 
 store_todos = []
 
